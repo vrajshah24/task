@@ -2,7 +2,7 @@
 class ContractorModel extends CI_Model
 {
     function contractor_insert($data){
-        $this->db->insert("contractor", $data);
+        $this->db->insert("contractor",$data);
         $Id = $this->db->insert_id();
         return $Id;
     }

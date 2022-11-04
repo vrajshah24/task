@@ -68,7 +68,7 @@
             <!-- /.card-body -->
 
             <div class="card-footer">
-              <button type="button" class="btn btn-primary">Submit</button>
+              <button type="submit" id="submit" name="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>
         </div>
@@ -120,10 +120,10 @@
       </div>
 
     </div>
-
     <script>
-      // const form = document.getElementById("form");
-      $("#form").validate({
+      $(document).ready(function() {
+        var table = $("#contractorTable").DataTable({});
+        $("#form").validate({
         rules: {
           contractor_name: {
             required: true,
@@ -135,6 +135,7 @@
           },
           contractor_address: {
             required: true,
+
           },
           contractor_plan: {
             required: true,
@@ -142,12 +143,11 @@
         },
         messages: {
           contractor_name: {
-            required: "Please enter a email address",
-            email: "Please enter a valid email address"
+            required: "Please enter a name",
           },
           contractor_code: {
-            required: "Please provide a password",
-            minlength: "Your password must be at least 5 characters long"
+            required: "Please provide a code",
+            minlength: "Your password must be exact 11 characters long"
           },
           contractor_address: {
             required: "Please provide an address",
@@ -168,27 +168,13 @@
           $(element).removeClass('is-invalid');
         }
       });
-    </script>
-    <script>
-      $(document).ready(function() {
-        var table = $("#contractorTable").DataTable({
-          "ordering": false
-        });
-      });
-    </script>
-    <script>
-      $(document).ready(function() {
-        var table = $("#contractorTable").DataTable({
-          responsive: true,
-          ordering: false,
+      var table = $("#contractorTable").DataTable({ 
           ajax: {
             type: "POST",
             url: '<?php echo base_url();?>"contractor/contractorList"',
             dataSrc: "",
           },
-          columns: [{
-              data: "contractor_id",
-            },
+          columns: [
             {
               data: "contractor_name",
             },
@@ -204,15 +190,54 @@
             {
               data: "contractor_plan",
             },
+          
+          ],
+        });
+        const form = document.getElementById("form");
+        const submitButton = document.getElementById("submit");
+        submitButton.addEventListener("click", function(e) {
+          // Prevent default button action
+          e.preventDefault();
+          var url = '<?php echo base_url();?>contractor/add_contractor';
+          $.ajax({
+            type: "POST",
+            url: url,
+            contentType: false,
+            cache: false,
+            processData: false,
+            data: new FormData(form),
+            success: function(data) {
+              table.ajax.reload();
+            },
+          });
+        });
+      });
+    </script>
+    <!-- <script>
+      $(document).ready(function() {
+        var table = $("#contractorTable").DataTable({ 
+          ajax: {
+            type: "POST",
+            url: '<?php echo base_url();?>"contractor/contractorList"',
+            dataSrc: "",
+          },
+          columns: [
             {
-              data: "contractor_status",
+              data: "contractor_name",
             },
             {
-              data: "record_status_id",
+              data: "contractor_code",
             },
             {
-              data: "record_delete_status",
+              data: "contractor_address",
             },
+            {
+              data: "contractor_doj",
+            },
+            {
+              data: "contractor_plan",
+            },
+          
           ],
         });
         const form = document.getElementById("form");
@@ -234,6 +259,6 @@
           });
         });
       });
-    </script>
+    </script> -->
 </body>
 </html>
